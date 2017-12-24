@@ -13,16 +13,15 @@ namespace CancelKeyPressBug.TestCases
 
             try
             {
+                // Violate condition #1
                 await AsyncTask.Run(tokenSource.Token);
             }
             catch (OperationCanceledException)
             {
                 Console.WriteLine("Cancelled");
             }
-            finally
-            {
-                tokenSource.Dispose();
-            }
+
+            tokenSource.Dispose();
         }
     }
 }

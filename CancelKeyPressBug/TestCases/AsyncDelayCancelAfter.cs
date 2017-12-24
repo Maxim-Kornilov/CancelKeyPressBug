@@ -10,15 +10,16 @@ namespace CancelKeyPressBug.TestCases
 
         public async Task RunAsync()
         {
-            ConsoleCancelEventHandler handler = (s, e) => 
+            var tokenSource = new CancellationTokenSource();
+
+            ConsoleCancelEventHandler handler = (s, e) =>
             {
                 e.Cancel = true;
-                Console.WriteLine("Ctrl+C is pressed");
+                Console.WriteLine("Cancel after 2 second");
+                // Violate condition #3
+                tokenSource.CancelAfter(TimeSpan.FromSeconds(2.0));
             };
             Console.CancelKeyPress += handler;
-
-            var tokenSource = new CancellationTokenSource();
-            tokenSource.CancelAfter(TimeSpan.FromSeconds(5.0));
 
             try
             {

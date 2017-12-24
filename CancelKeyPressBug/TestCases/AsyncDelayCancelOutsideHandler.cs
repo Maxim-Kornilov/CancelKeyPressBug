@@ -1,17 +1,25 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CancelKeyPressBug.TestCases
 {
-    class AsyncDelayUnsubSameThread : ITestCase
+    class AsyncDelayCancelOutsideHandler : ITestCase
     {
         public void Run() => RunAsync().GetAwaiter().GetResult();
 
         public async Task RunAsync()
         {
             var executor = new SingleThreadExecutor();
+            var tokenSource = new CancellationTokenSource();
 
-            var tokenSource = executor.Execute(() => new CancelKeyPressedTokenSource());
+            ConsoleCancelEventHandler handler = (s, e) =>
+            {
+                e.Cancel = true;
+                // Violate condition #2
+                Task.Run(() => tokenSource.Cancel());
+            };
+            Console.CancelKeyPress += handler;
 
             try
             {
@@ -21,10 +29,8 @@ namespace CancelKeyPressBug.TestCases
             {
                 Console.WriteLine("Cancelled");
             }
-            finally
-            {
-                executor.Execute(() => tokenSource.Dispose());
-            }
+
+            Console.CancelKeyPress -= handler;
         }
     }
 }

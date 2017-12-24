@@ -20,10 +20,8 @@ namespace CancelKeyPressBug.TestCases
             {
                 Console.WriteLine("Cancelled");
             }
-            finally
-            {
-                tokenSource.Dispose();
-            }
+
+            tokenSource.Dispose();
         }
     }
 }

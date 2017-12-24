@@ -11,16 +11,15 @@ namespace CancelKeyPressBug.TestCases
 
             try
             {
+                // Violate condition #4
                 Task.Delay(TimeSpan.FromHours(1.0), tokenSource.Token).GetAwaiter().GetResult();
             }
             catch (OperationCanceledException)
             {
                 Console.WriteLine("Cancelled");
             }
-            finally
-            {
-                tokenSource.Dispose();
-            }
+
+            tokenSource.Dispose();
         }
     }
 }

@@ -3,13 +3,15 @@ using System.Threading.Tasks;
 
 namespace CancelKeyPressBug.TestCases
 {
-    class AsyncDelayUnsubOutsideFinally : ITestCase
+    class AsyncDelaySubAndUnsubSameThread : ITestCase
     {
         public void Run() => RunAsync().GetAwaiter().GetResult();
 
         public async Task RunAsync()
         {
-            var tokenSource = new CancelKeyPressedTokenSource();
+            var executor = new SingleThreadExecutor();
+
+            var tokenSource = executor.Execute(() => new CancelKeyPressedTokenSource());
 
             try
             {
@@ -19,7 +21,8 @@ namespace CancelKeyPressBug.TestCases
             {
                 Console.WriteLine("Cancelled");
             }
-            tokenSource.Dispose();
+
+            executor.Execute(() => tokenSource.Dispose());
         }
     }
 }

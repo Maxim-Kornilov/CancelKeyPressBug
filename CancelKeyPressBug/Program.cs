@@ -12,12 +12,11 @@ namespace CancelKeyPressBug
         {
             typeof(AsyncDelayCancel), // Hangs
             typeof(AsyncDelayCancelAfter),
+            typeof(AsyncDelayCancelOutsideHandler),
             typeof(AsyncDelayNoCalcel),
             typeof(AsyncDelayNoCancelThrow),
             typeof(AsyncDelaySubAndUnsubAfterCancel),
-            typeof(AsyncDelayUnsubOutsideFinally), // Hung
-            typeof(AsyncDelayUnsubSameThread), // Hangs
-            typeof(AsyncDelayUnsubSameThreadOutsideFinally), // Hang
+            typeof(AsyncDelaySubAndUnsubSameThread), // Hangs
             typeof(AsyncTaskCancel),
             typeof(SyncDelay),
         };
